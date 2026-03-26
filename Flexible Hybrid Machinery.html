@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flexible Hybrid Machinery for Rigid Box and Hard Cover - Kylin Machines</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #0f2a4a;
+    --primary-light: #1a3d6e;
+    --accent: #e8a838;
+    --accent2: #d4483b;
+    --dark: #0a1628;
+    --light: #f4f6f9;
+    --white: #ffffff;
+    --gray: #6b7a8d;
+    --gradient1: linear-gradient(135deg, #0f2a4a 0%, #1a3d6e 50%, #1e5a8e 100%);
+    --gradient2: linear-gradient(135deg, #e8a838 0%, #f0c060 100%);
+    --shadow: 0 20px 60px rgba(0,0,0,0.15);
+    --shadow-sm: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { font-family: 'Inter', sans-serif; background: var(--dark); color: #333; overflow-x: hidden; }
+
+  /* ===== SLIDE SYSTEM ===== */
+  .slide {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .slide-inner {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== NAV DOTS ===== */
+  .nav-dots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .nav-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    border: 2px solid rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .nav-dot:hover, .nav-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.3);
+  }
+  .nav-dot .tooltip {
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .nav-dot:hover .tooltip { opacity: 1; }
+
+  /* ===== TOP NAV BAR ===== */
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: rgba(15, 42, 74, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(232, 168, 56, 0.3);
+  }
+  .top-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .top-bar-logo img { height: 36px; }
+  .slide-counter {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* ===== SLIDE 0 - COVER ===== */
+  .slide-cover {
+    background: var(--gradient1);
+    position: relative;
+  }
+  .slide-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('https://kylinmachines.com/wp-content/uploads/2024/03/Fully-auto-rigid-box-machine-Ky-660A.jpg') center/cover no-repeat;
+    opacity: 0.12;
+  }
+  .slide-cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,168,56,0.15) 0%, transparent 70%);
+  }
+  .cover-badge {
+    display: inline-block;
+    background: var(--gradient2);
+    color: var(--primary);
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 72px);
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .cover-title span { color: var(--accent); }
+  .cover-subtitle {
+    font-size: clamp(16px, 2vw, 22px);
+    color: rgba(255,255,255,0.7);
+    max-width: 700px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .cover-stats {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+  }
+  .cover-stat h3 {
+    font-size: 42px;
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .cover-stat p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* ===== PRODUCT SLIDES ===== */
+  .slide-product {
+    background: var(--light);
+  }
+  .slide-product:nth-child(odd) {
+    background: var(--white);
+  }
+
+  .product-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .product-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gradient1);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .product-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .product-tagline {
+    font-size: 18px;
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  .product-image-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: white;
+  }
+  .product-image-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+  .product-image-card .model-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: var(--gradient2);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .product-info { display: flex; flex-direction: column; gap: 24px; }
+
+  .product-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #4a5568;
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--accent);
+  }
+
+  /* ===== SPEC TABLE ===== */
+  .spec-table {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .spec-table-header {
+    background: var(--gradient1);
+    color: white;
+    padding: 16px 28px;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .spec-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .spec-table td {
+    padding: 12px 28px;
+    font-size: 14px;
+    border-bottom: 1px solid #edf2f7;
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table td:first-child {
+    font-weight: 600;
+    color: var(--primary);
+    width: 45%;
+    background: #f8fafc;
+  }
+  .spec-table td:last-child {
+    color: #4a5568;
+  }
+
+  /* ===== FEATURES GRID ===== */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .features-grid-exception {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .feature-card {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    border: 1px solid #edf2f7;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent);
+  }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(232,168,56,0.15), rgba(232,168,56,0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .feature-card h4 {
+    font-size: 15px;
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ===== VIDEO SECTION ===== */
+  .video-wrapper {
+    margin-top: 40px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* ===== APPLICATIONS ===== */
+  .app-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .app-tag {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ===== SLIDE - OVERVIEW / WORKFLOW ===== */
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-top: 50px;
+  }
+  .workflow-card {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 30px 16px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .workflow-card:hover { transform: translateY(-6px); }
+  .workflow-card::after {
+    content: '→';
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .workflow-card:last-child::after { display: none; }
+  .workflow-step {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gradient2);
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .workflow-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 14px;
+    border-radius: 8px;
+  }
+  .workflow-card h4 {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .workflow-card p {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* ===== COMPANY SLIDE ===== */
+  .slide-company { background: var(--gradient1); }
+  .company-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+  }
+  .company-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3vw, 44px);
+    color: white;
+    margin-bottom: 20px;
+  }
+  .company-text h2 span { color: var(--accent); }
+  .company-text p {
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+  .service-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 22px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+  .service-card:hover {
+    background: rgba(255,255,255,0.14);
+    transform: translateY(-3px);
+  }
+  .service-card h4 {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .service-card p {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .testimonial-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 28px;
+    backdrop-filter: blur(10px);
+  }
+  .testimonial-card blockquote {
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 18px;
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid var(--accent);
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .testimonial-author img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+  }
+  .testimonial-author strong {
+    color: white;
+    font-size: 14px;
+    display: block;
+  }
+  .testimonial-author span {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+  }
+
+  /* ===== CONTACT SLIDE ===== */
+  .slide-contact {
+    background: var(--dark);
+    text-align: center;
+  }
+  .contact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 56px);
+    color: white;
+    margin-bottom: 16px;
+  }
+  .contact-title span { color: var(--accent); }
+  .contact-sub {
+    color: rgba(255,255,255,0.6);
+    font-size: 18px;
+    margin-bottom: 50px;
+  }
+  .contact-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+  }
+  .contact-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 30px 40px;
+    text-align: center;
+    min-width: 200px;
+    transition: all 0.3s;
+  }
+  .contact-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-4px);
+  }
+  .contact-card .icon { font-size: 32px; margin-bottom: 14px; }
+  .contact-card h4 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
+  .contact-card p { color: rgba(255,255,255,0.7); font-size: 14px; }
+  .contact-card a { color: rgba(255,255,255,0.7); text-decoration: none; }
+  .contact-card a:hover { color: var(--accent); }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--gradient2);
+    color: var(--primary);
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 8px 30px rgba(232,168,56,0.3);
+  }
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(232,168,56,0.5);
+  }
+
+  /* ===== CLIENT LOGOS ===== */
+  .client-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 40px;
+    opacity: 0.6;
+  }
+  .client-logos img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    filter: none;
+    transition: opacity 0.3s, transform 0.3s;
+    background: white;
+    border-radius: 8px;
+    padding: 5px;
+  }
+  .client-logos img:hover { 
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* ===== GALLERY IMAGES ROW ===== */
+  .gallery-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .gallery-row img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s;
+  }
+  .gallery-row img:hover { transform: scale(1.05); }
+
+  /* ===== PROCESS IMAGE ===== */
+  .process-img {
+    margin-top: 30px;
+    text-align: center;
+  }
+  .process-img img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .fade-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .product-grid { grid-template-columns: 1fr; gap: 30px; }
+    .workflow-grid { grid-template-columns: repeat(3, 1fr); }
+    .workflow-card::after { display: none; }
+    .company-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .slide-inner { padding: 70px 20px 40px; }
+    .nav-dots { right: 10px; gap: 8px; }
+    .nav-dot { width: 10px; height: 10px; }
+    .nav-dot .tooltip { display: none; }
+    .top-bar { padding: 10px 16px; }
+    .top-bar-logo { font-size: 14px; }
+    .workflow-grid { grid-template-columns: 1fr 1fr; }
+    .features-grid, .features-grid-exception { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .service-cards { grid-template-columns: 1fr; }
+    .cover-stats { gap: 24px; }
+    .cover-stat h3 { font-size: 30px; }
+    .gallery-row { grid-template-columns: 1fr 1fr; }
+    .contact-cards { flex-direction: column; align-items: center; }
+  }
+  @media (max-width: 480px) {
+    .workflow-grid { grid-template-columns: 1fr; }
+    .cover-stats { flex-direction: column; }
+    .gallery-row { grid-template-columns: 1fr; }
+  }
+
+  /* Footer */
+  .ppt-footer {
+    text-align: center;
+    padding: 30px;
+    background: var(--dark);
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ppt-footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-logo">
+    <span>🏭</span>
+    <span>KYLIN MACHINES</span>
+  </div>
+  <div class="slide-counter" id="slideCounter">01 / 09</div>
+</div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-slide="0"><span class="tooltip">Cover</span></div>
+  <div class="nav-dot" data-slide="1"><span class="tooltip">Product Overview</span></div>
+  <div class="nav-dot" data-slide="2"><span class="tooltip">Rigid Box Machine</span></div>
+  <div class="nav-dot" data-slide="3"><span class="tooltip">Hard Cover Machine</span></div>
+  <div class="nav-dot" data-slide="4"><span class="tooltip">Corner Pasting Machine</span></div>
+  <div class="nav-dot" data-slide="5"><span class="tooltip">Positioning Machine</span></div>
+  <div class="nav-dot" data-slide="6"><span class="tooltip">Glue Machine</span></div>
+  <div class="nav-dot" data-slide="7"><span class="tooltip">Company & Service</span></div>
+  <div class="nav-dot" data-slide="8"><span class="tooltip">Contact Us</span></div>
+</div>
+
+<!-- ========== SLIDE 0: COVER ========== -->
+<section class="slide slide-cover" id="slide-0">
+  <div class="slide-inner">
+    <div class="fade-in">
+      <div class="cover-badge">Kylin Machines — Product Catalog 2025</div>
+      <h1 class="cover-title">
+        Flexible Hybrid Machinery<br>for <span>Rigid Box</span> &amp;<br><span>Hard Cover</span>
+      </h1>
+      <p class="cover-subtitle">
+        Complete production line solutions for premium rigid box packaging and hard cover book manufacturing. Engineered for efficiency, built for precision, designed for your success.
+      </p>
+      <a href="#slide-1" class="cta-btn">Explore Products ↓</a>
+      <div class="cover-stats">
+        <div class="cover-stat">
+          <h3>10,000+</h3>
+          <p>Customers Worldwide</p>
+        </div>
+        <div class="cover-stat">
+          <h3>30+</h3>
+          <p>Countries Served</p>
+        </div>
+        <div class="cover-stat">
+          <h3>5</h3>
+          <p>Core Product Lines</p>
+        </div>
+        <div class="cover-stat">
+          <h3>3 Yr</h3>
+          <p>Quality Warranty</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 1: PRODUCT OVERVIEW / WORKFLOW ========== -->
+<section class="slide slide-product" id="slide-1" style="background: #fff;">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-label">Production Workflow</div>
+      <h2 class="product-title">Complete Production Line at a Glance</h2>
+      <p class="product-tagline">5 integrated machines covering every step of rigid box and hard cover production</p>
+    </div>
+    <div class="workflow-grid fade-in">
+      <div class="workflow-card">
+        <div class="workflow-step">1</div>
+        <img src="https://kylinmachines.com/wp-content/uploads/2021/01/feeder-glue-machine-1024x709-1.jpg" alt="Glue Machine">
+        <h4>Auto Feeder Gluer</h4>
+        <p>KY-650S — Paper feeding & precision gluing</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-step">2</div>
+        <img src="https://kylinmachines.com/wp-content/uploads/2024/03/Fully-auto-rigid-box-machine-Ky-660A.jpg" alt="Rigid Box Machine">
+        <h4>Fully Auto Rigid Box Machine</h4>
+        <p>KY-660A — High-speed box forming</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-step">3</div>
+        <img src="https://kylinmachines.com/wp-content/uploads/2020/12/case-maker1-1024x998.jpg" alt="Hard Cover Machine">
+        <h4>Hard Cover Making Machine</h4>
+        <p>Auto case maker for book covers</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-step">4</div>
+        <img src="https://kylinmachines.com/wp-content/uploads/2020/12/box-corner-taping-machne-1024x844.jpg" alt="Corner Pasting">
+        <h4>Quad Corner Pasting</h4>
+        <p>KY-600 — 6,000 pcs/hour taping</p>
+      </div>
+      <div class="workflow-card">
+        <div class="workflow-step">5</div>
+        <img src="https://kylinmachines.com/wp-content/uploads/2025/09/wechat_2025-09-17_162249_980-removebg-preview.png" alt="Positioning Machine">
+        <h4>Dual-Purpose Positioning</h4>
+        <p>KY-003 — Precision optical fiber positioning</p>
+      </div>
+    </div>
+    <div class="process-img fade-in">
+      <img src="https://kylinmachines.com/wp-content/uploads/2024/03/process.png" alt="Production Process Flow" style="margin-top:40px;max-height:200px;">
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 2: PRODUCT 1 — RIGID BOX MACHINE ========== -->
+<section class="slide slide-product" id="slide-2">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-number">01</div>
+      <div class="product-label">Core Machine</div>
+      <h2 class="product-title">Fully Auto Rigid Box Machine KY-660A</h2>
+      <p class="product-tagline">High-Speed Automatic Rigid Box Production Solution</p>
+    </div>
+    <div class="product-grid">
+      <div class="fade-in-left">
+        <div class="product-image-card">
+          <span class="model-badge">KY-660A</span>
+          <img src="https://kylinmachines.com/wp-content/uploads/2024/03/Fully-auto-rigid-box-machine-Ky-660A.jpg" alt="Fully Auto Rigid Box Machine Ky-660A">
+        </div>
+        <div class="video-wrapper" style="margin-top:24px;">
+          <iframe src="https://www.youtube.com/embed/g-WLmVCMCfA" title="Fully Auto Rigid Box Machine Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="product-info fade-in-right">
+        <div class="product-desc">
+          The Fully Auto Rigid Box Machine KY-660A is an advanced, high-efficiency production system designed for manufacturing premium rigid boxes at industrial scale. This fully automated machine integrates paper feeding, gluing, positioning, and wrapping processes into one seamless production line. With an impressive working speed of 20-30 pieces per minute and support for both cold and hot glue systems, this machine delivers exceptional productivity and versatility.
+        </div>
+        <div class="spec-table">
+          <div class="spec-table-header">📋 Technical Specifications</div>
+          <table>
+            <tr><td>Model</td><td>KY-660A</td></tr>
+            <tr><td>Working Speed</td><td>20-30 Pcs/Min</td></tr>
+            <tr><td>Max Box Size</td><td>550 × 400 × 120mm</td></tr>
+            <tr><td>Min Box Size</td><td>80 × 60 × 10mm</td></tr>
+            <tr><td>Max Paper Size</td><td>690 × 620mm</td></tr>
+            <tr><td>Min Paper Size</td><td>140 × 90mm</td></tr>
+            <tr><td>Power</td><td>14 KW</td></tr>
+            <tr><td>Voltage</td><td>380V</td></tr>
+            <tr><td>Glue Type</td><td>Cold / Hot Glue</td></tr>
+            <tr><td>Machine Weight</td><td>3,800 Kg</td></tr>
+            <tr><td>Dimensions</td><td>6650 × 4700 × 2900mm</td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="font-size:14px;color:var(--primary);margin-bottom:10px;font-weight:700;">Applications</h4>
+          <div class="app-tags">
+            <span class="app-tag">Luxury Gift Boxes</span>
+            <span class="app-tag">Cosmetic Boxes</span>
+            <span class="app-tag">Electronics Packaging</span>
+            <span class="app-tag">Wine & Spirits</span>
+            <span class="app-tag">Jewelry Packaging</span>
+            <span class="app-tag">Pharmaceutical</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="features-grid fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h4>Fully Automatic Operation</h4>
+        <p>Complete automation from paper feeding to finished box, minimizing labor costs and maximizing efficiency.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h4>High Production Speed</h4>
+        <p>Impressive 20-30 pieces per minute output ensures high productivity for industrial-scale production.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h4>Dual Glue System</h4>
+        <p>Supports both cold and hot glue applications for versatile production requirements.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h4>Wide Size Range</h4>
+        <p>Handles box sizes from 80×60×10mm to 550×400×120mm for diverse packaging needs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h4>Precision Positioning</h4>
+        <p>Advanced positioning system ensures accurate paper placement and perfect box formation every time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h4>Industrial Grade Build</h4>
+        <p>Robust 3,800 Kg construction ensures stability, durability, and consistent performance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 3: PRODUCT 2 — HARD COVER MACHINE ========== -->
+<section class="slide slide-product" id="slide-3">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-number">02</div>
+      <div class="product-label">Book Binding</div>
+      <h2 class="product-title">Auto Hard Cover Making Machine</h2>
+      <p class="product-tagline">Premium Hard Cover Manufacturing for Publishing Industry</p>
+    </div>
+    <div class="product-grid">
+      <div class="fade-in-left">
+        <div class="product-image-card">
+          <span class="model-badge">Case Maker</span>
+          <img src="https://kylinmachines.com/wp-content/uploads/2020/12/case-maker1-1024x998.jpg" alt="Hard Cover Making Machine">
+        </div>
+        <div class="video-wrapper" style="margin-top:24px;">
+          <iframe src="https://www.youtube.com/embed/ywYtDc1yvLY" title="Auto Hard Cover Making Machine Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="product-info fade-in-right">
+        <div class="product-desc">
+          Our professional Hard Cover Making Machine is designed to meet the demanding requirements of modern publishing and printing industries. The hard cover making process involves precise assembly of cardboard, adhesive application, and cover material wrapping to create durable book covers. With advanced PLC control systems and precision engineering, our machine delivers professional-grade results meeting international quality standards.
+        </div>
+        <div class="spec-table">
+          <div class="spec-table-header">📋 Technical Specifications</div>
+          <table>
+            <tr><td>Machine Type</td><td>Automatic Hard Cover Maker</td></tr>
+            <tr><td>Production Speed</td><td>600-900 covers/hour</td></tr>
+            <tr><td>Cover Size Range</td><td>100-450mm (L × W)</td></tr>
+            <tr><td>Board Thickness</td><td>2.0-4.0mm cardboard</td></tr>
+            <tr><td>Power</td><td>380V/50Hz, 3-phase, 8KW</td></tr>
+            <tr><td>Dimensions</td><td>3200 × 1800 × 1500mm</td></tr>
+            <tr><td>Weight</td><td>1,800 Kg</td></tr>
+            <tr><td>Precision</td><td>±0.3mm accuracy</td></tr>
+            <tr><td>Control System</td><td>PLC with 10″ Touch Screen</td></tr>
+            <tr><td>Warranty</td><td>2 Years Full + Training</td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="font-size:14px;color:var(--primary);margin-bottom:10px;font-weight:700;">Applications</h4>
+          <div class="app-tags">
+            <span class="app-tag">Novels & Textbooks</span>
+            <span class="app-tag">Photo Albums</span>
+            <span class="app-tag">Journals</span>
+            <span class="app-tag">Premium Publications</span>
+            <span class="app-tag">Case-bound Books</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="features-grid fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h4>Precision Engineering</h4>
+        <p>Advanced PLC control system ensures ±0.3mm accuracy for every hard cover produced.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h4>High Efficiency</h4>
+        <p>Produces 600-900 hard covers per hour with minimal waste, maximizing productivity.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h4>Easy Operation</h4>
+        <p>User-friendly 10″ touch screen interface reduces training time and operational complexity.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💎</div>
+        <h4>Premium Quality</h4>
+        <p>Professional-grade hard covers suitable for novels, textbooks, and premium publications.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h4>Versatile Design</h4>
+        <p>Accommodates cover sizes 100-450mm and board thickness 2.0-4.0mm for diverse requirements.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h4>Reliable Support</h4>
+        <p>Comprehensive 2-year warranty with on-site service, training programs, and technical support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 4: PRODUCT 3 — CORNER PASTING MACHINE ========== -->
+<section class="slide slide-product" id="slide-4">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-number">03</div>
+      <div class="product-label">Corner Finishing</div>
+      <h2 class="product-title">Auto Quad Corner Pasting Machine KY-600</h2>
+      <p class="product-tagline">High-Speed Automatic Quad Corner Stayer for Rigid Box Production</p>
+    </div>
+    <div class="product-grid">
+      <div class="fade-in-left">
+        <div class="product-image-card">
+          <span class="model-badge">KY-600</span>
+          <img src="https://kylinmachines.com/wp-content/uploads/2020/12/box-corner-taping-machne-1024x844.jpg" alt="Auto Quad Corner Pasting Machine">
+        </div>
+        <div class="video-wrapper" style="margin-top:24px;">
+          <iframe src="https://www.youtube.com/embed/GRi1xAj1kWQ" title="Auto Quad Corner Pasting Machine Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="product-info fade-in-right">
+        <div class="product-desc">
+          The Auto Box Corner Taping Machine KY-600 is a high-speed automatic quad corner stayer designed for rigid box production. Equipped with comprehensive safety guard system and fully CE approved for international standard compliance, it features fully automatic four-corner taping without manual intervention, dramatically improving production efficiency to 6,000 pcs/hour.
+        </div>
+        <div class="spec-table">
+          <div class="spec-table-header">📋 Technical Specifications</div>
+          <table>
+            <tr><td>Model</td><td>KY-600</td></tr>
+            <tr><td>Speed</td><td>6,000 pcs/hour</td></tr>
+            <tr><td>Min Box Size</td><td>45 × 45 × 10mm</td></tr>
+            <tr><td>Max Box Size</td><td>450 × 450 × 150mm</td></tr>
+            <tr><td>Sheet Max Open Size</td><td>600 × 660mm</td></tr>
+            <tr><td>System</td><td>PLC Touching Control Screen</td></tr>
+            <tr><td>Power</td><td>2 KW</td></tr>
+            <tr><td>Dimensions</td><td>1750 × 1160 × 1920mm</td></tr>
+            <tr><td>Weight</td><td>980 Kg</td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="font-size:14px;color:var(--primary);margin-bottom:10px;font-weight:700;">Applications</h4>
+          <div class="app-tags">
+            <span class="app-tag">Gift Boxes</span>
+            <span class="app-tag">Jewelry Boxes</span>
+            <span class="app-tag">Shoes Boxes</span>
+            <span class="app-tag">Tea Boxes</span>
+            <span class="app-tag">Wine Boxes</span>
+            <span class="app-tag">Perfume Boxes</span>
+            <span class="app-tag">Phone Boxes</span>
+            <span class="app-tag">Book Type Boxes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="features-grid features-grid-exception fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h4>Safety Guard & CE Approved</h4>
+        <p>Comprehensive safety guard system, fully CE approved for international standard compliance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h4>Auto Quad Stayer</h4>
+        <p>Fully automatic four-corner taping without manual intervention, 6,000 pcs/hour throughput.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h4>Easy Integration</h4>
+        <p>Easily equipped with associated functional line for seamless production workflow connection.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h4>High Accuracy</h4>
+        <p>High accuracy for achieving high printing registration, ensuring perfect alignment on every box.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 5: PRODUCT 4 — POSITIONING MACHINE ========== -->
+<section class="slide slide-product" id="slide-5">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-number">04</div>
+      <div class="product-label">Dual-Purpose Innovation</div>
+      <h2 class="product-title">Dual-Purpose Optical Fiber Positioning Machine KY-003</h2>
+      <p class="product-tagline">Two Machines in One — Save 50% on Equipment Investment</p>
+    </div>
+    <div class="product-grid">
+      <div class="fade-in-left">
+        <div class="product-image-card" style="background:linear-gradient(135deg,#f8fafc,#edf2f7);padding:30px;">
+          <span class="model-badge">KY-003</span>
+          <img src="https://kylinmachines.com/wp-content/uploads/2025/09/wechat_2025-09-17_162249_980-removebg-preview.png" alt="KY-003 Dual-Purpose Positioning Machine" style="background:transparent;">
+        </div>
+        <div class="video-wrapper" style="margin-top:24px;">
+          <iframe src="https://www.youtube.com/embed/myF7NZSlUJ4" title="Dual-Purpose Optical Fiber Positioning Machine Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="product-info fade-in-right">
+        <div class="product-desc">
+          The KY-003™ is an innovative dual-purpose mobile optical fiber positioning machine designed for processing both lid and bottom rigid boxes and hard cover finished products. This cutting-edge machine revolutionizes the positioning process with its advanced 4-in-1 functionality. With its intelligent dual-purpose design and space-efficient footprint, it eliminates the need for multiple machines while dramatically improving production speed and precision.
+        </div>
+        <div class="spec-table">
+          <div class="spec-table-header">📋 Technical Specifications</div>
+          <table>
+            <tr><td>Model</td><td>KY-003</td></tr>
+            <tr><td>Max Box Size</td><td>400 × 400 × 100mm</td></tr>
+            <tr><td>Min Box Size</td><td>70 × 70 × 10mm</td></tr>
+            <tr><td>Max Shell Size</td><td>900 × 400 × ±1.5mm</td></tr>
+            <tr><td>Min Shell Size</td><td>70 × 100 × ±1.5mm</td></tr>
+            <tr><td>Max Dividing Plates</td><td>5</td></tr>
+            <tr><td>Plate Width</td><td>≥50mm</td></tr>
+            <tr><td>Production Rate</td><td>18-25 pcs/min</td></tr>
+            <tr><td>Precision</td><td>±0.3 × ±0.5mm</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="features-grid fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <h4>Complete 4-in-1 Functionality</h4>
+        <p>Rigid box, connecting plate, separated board plate, and lining positioning — most comprehensive in a single machine.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h4>Advanced Material Protection</h4>
+        <p>Scratch-proof technology with ultra-smooth operation prevents material damage during processing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h4>Space-Efficient Dual Design</h4>
+        <p>Single workstation handles dual functions with compact footprint. Belt feeder mounts on push-plate feeder.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h4>Rapid Setup & Operation</h4>
+        <p>Manipulator arm, belt feeder, and push plate feeder. Fast installation with same-day operation capability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h4>High Precision Positioning</h4>
+        <p>±0.3 × ±0.5mm precision ensures perfect results every time with consistent quality control.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h4>Cost-Effective Solution</h4>
+        <p>Two machines in one — save 50% on equipment investment while doubling productivity and fast ROI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 6: PRODUCT 5 — GLUE MACHINE ========== -->
+<section class="slide slide-product" id="slide-6">
+  <div class="slide-inner">
+    <div class="product-header fade-in">
+      <div class="product-number">05</div>
+      <div class="product-label">Gluing Solution</div>
+      <h2 class="product-title">Auto Feeder Gluer with Delivery Belt KY-650S</h2>
+      <p class="product-tagline">High-Performance Industrial Machine for Automatic Paper Feeding & Precision Gluing</p>
+    </div>
+    <div class="product-grid">
+      <div class="fade-in-left">
+        <div class="product-image-card">
+          <span class="model-badge">KY-650S</span>
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/feeder-glue-machine-1024x709-1.jpg" alt="Auto Feeder Gluer KY-650S">
+        </div>
+        <div class="video-wrapper" style="margin-top:24px;">
+          <iframe src="https://www.youtube.com/embed/YzHoDUw9Vh8" title="Auto Feeder Gluer Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="product-info fade-in-right">
+        <div class="product-desc">
+          The KY-650S Auto Feeder Gluer with Delivery Belt is a fully automated industrial machine built for high-volume paper gluing tasks in packaging, printing, and bookbinding environments. It combines automatic sheet feeding, precision gluing, and a delivery belt system into one compact and efficient unit. With support for sheet widths from 80mm to 600mm and thicknesses from 80 to 350 gsm, this machine adapts easily to various paper types and product specifications.
+        </div>
+        <div class="spec-table">
+          <div class="spec-table-header">📋 Technical Specifications</div>
+          <table>
+            <tr><td>Model</td><td>KY-650S</td></tr>
+            <tr><td>Sheet Width</td><td>80 – 600mm</td></tr>
+            <tr><td>Sheet Thickness</td><td>80 – 350 gsm</td></tr>
+            <tr><td>Working Speed</td><td>7 – 40 pcs/min</td></tr>
+            <tr><td>Power</td><td>0.8 KW</td></tr>
+            <tr><td>Dimensions</td><td>3600 × 1300 × 1070mm</td></tr>
+            <tr><td>Weight</td><td>800 Kg</td></tr>
+          </table>
+        </div>
+        <div>
+          <h4 style="font-size:14px;color:var(--primary);margin-bottom:10px;font-weight:700;">Applications</h4>
+          <div class="app-tags">
+            <span class="app-tag">Box & Carton Mfg</span>
+            <span class="app-tag">Book Binding</span>
+            <span class="app-tag">Paper Bag Production</span>
+            <span class="app-tag">Gift Box Packaging</span>
+            <span class="app-tag">Label & Envelope</span>
+            <span class="app-tag">Paper Lamination</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="features-grid fade-in">
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h4>Automatic Paper Feeding</h4>
+        <p>Loads hundreds of paper sheets at once, dramatically reducing manual labor and increasing throughput.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌀</div>
+        <h4>Suction Anti-Bending</h4>
+        <p>Advanced suction device prevents bending and bubbling, ensuring smooth flat paper handling.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">↔️</div>
+        <h4>Dual-Side Conveyor</h4>
+        <p>Simultaneous operation on both sides of the conveyor belt enables efficient parallel processing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌡️</div>
+        <h4>Timing & Temperature Control</h4>
+        <p>Precise timing and temperature control ensures optimal glue application quality for different materials.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <h4>Hot-Melt Glue Compatible</h4>
+        <p>Supports hot-melt adhesive for fast-bonding applications requiring quick setting and strong adhesion.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">❄️</div>
+        <h4>Cold Glue Compatible</h4>
+        <p>Also supports cold glue for heat-sensitive substrates, providing flexibility across applications.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 7: COMPANY & SERVICES ========== -->
+<section class="slide slide-company" id="slide-7">
+  <div class="slide-inner">
+    <div class="company-grid">
+      <div class="company-text fade-in-left">
+        <div class="cover-badge" style="margin-bottom:20px;">About Kylin Machines</div>
+        <h2>Trusted by <span>10,000+ Customers</span> in 30+ Countries</h2>
+        <p>
+          Kylin Machines is a leading manufacturer of packaging machinery, specializing in rigid box making, hard cover manufacturing, and related production line equipment. We provide complete solutions from individual machines to fully integrated production lines.
+        </p>
+        <p>
+          With years of industry experience, we serve customers across UK, USA, Europe, Middle East, Asia, and more — providing world-class equipment, training, and after-sales support.
+        </p>
+        <div class="service-cards" style="margin-top:24px;">
+          <div class="service-card">
+            <h4>🎓 Equipment Training</h4>
+            <p>Authorized training programmes led by specialists. Setup, optimization, troubleshooting, and safety.</p>
+          </div>
+          <div class="service-card">
+            <h4>🛡️ 3-Year Warranty</h4>
+            <p>Comprehensive quality warranty with 30-day satisfaction guarantee and full refund policy.</p>
+          </div>
+          <div class="service-card">
+            <h4>📞 Priority Support</h4>
+            <p>Free phone tech support, on-site engineer visits, and experienced factory technicians ready to help.</p>
+          </div>
+          <div class="service-card">
+            <h4>🔧 Maintenance & Repair</h4>
+            <p>Regular maintenance programs and rapid repair with on-site engineers carrying common spare parts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fade-in-right">
+        <h3 style="color:var(--accent);font-size:18px;margin-bottom:24px;font-weight:700;">What Our Clients Say</h3>
+        <div class="testimonials-grid" style="grid-template-columns:1fr;">
+          <div class="testimonial-card">
+            <blockquote>"The machine is working now fine, beautiful… thank you so much and maybe if we need other kind of box making machines I will contact you."</blockquote>
+            <div class="testimonial-author">
+              <img src="https://kylinmachines.com/wp-content/uploads/2021/01/bassil-150x150.jpg" alt="Nadine Kodsy">
+              <div>
+                <strong>Nadine Kodsy</strong>
+                <span>CEO - Bassil Bookbinding</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <blockquote>"Your box corner taper has been running like a champion saving us time and money!! As we continue to grow we will definitely keep in touch."</blockquote>
+            <div class="testimonial-author">
+              <img src="https://kylinmachines.com/wp-content/uploads/2022/02/ampersand1-150x150.png" alt="Jason Hopkins">
+              <div>
+                <strong>Jason Hopkins</strong>
+                <span>Ampersand — Print & Marketing</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <blockquote>"We have purchased case maker Ky-450, right now the machine is running very stable, we are going to order one more machine from Kylin."</blockquote>
+            <div class="testimonial-author">
+              <img src="https://kylinmachines.com/wp-content/uploads/2021/01/mm1-150x150.jpg" alt="Alberto Rinaldi">
+              <div>
+                <strong>Alberto Rinaldi</strong>
+                <span>CEO — MEM Company</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="client-logos" style="margin-top:30px;">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/taropack-150x136.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/Xpress-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box3-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box4-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box5-150x133.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/cosmo-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box6-150x144.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box7-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/pc-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/press1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/mm1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/bassil-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/korea-150x85.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/ampersand1-150x150.png" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/gilding-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box8-150x150.jpg" alt="Client">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SLIDE 8: CONTACT / CTA ========== -->
+<section class="slide slide-contact" id="slide-8">
+  <div class="slide-inner">
+    <div class="fade-in">
+      <div class="cover-badge">Get Started Today</div>
+      <h2 class="contact-title">Ready to Transform Your<br><span>Production Line?</span></h2>
+      <p class="contact-sub">Contact our team for expert consultation, machine pricing, and fast worldwide shipping.</p>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="icon">🌐</div>
+          <h4>Website</h4>
+          <p><a href="https://kylinmachines.com" target="_blank">kylinmachines.com</a></p>
+        </div>
+        <div class="contact-card">
+          <div class="icon">📧</div>
+          <h4>Email</h4>
+          <p><a href="mailto:info@kylinmachines.com">info@kylinmachines.com</a></p>
+        </div>
+        <div class="contact-card">
+          <div class="icon">🌍</div>
+          <h4>Global Service</h4>
+          <p>UK, USA, Europe, Middle East, Asia & More</p>
+        </div>
+      </div>
+      <a href="https://kylinmachines.com/contact/" target="_blank" class="cta-btn" style="font-size:18px;padding:18px 50px;">
+        Request a Quote Now →
+      </a>
+      <div style="margin-top:60px;">
+        <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:20px;">TRUSTED BY LEADING COMPANIES WORLDWIDE</p>
+        <div class="client-logos" style="justify-content:center;">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/taropack-150x136.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/Xpress-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box3-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box4-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box5-150x133.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/cosmo-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box6-150x144.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box7-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/pc-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/press1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/mm1-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/bassil-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/korea-150x85.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2022/02/ampersand1-150x150.png" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/gilding-150x150.jpg" alt="Client">
+          <img src="https://kylinmachines.com/wp-content/uploads/2021/01/box8-150x150.jpg" alt="Client">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="ppt-footer">
+  © 2025 <a href="https://kylinmachines.com" target="_blank">Kylin Machines</a> — Flexible Hybrid Machinery for Rigid Box and Hard Cover. All rights reserved.
+</div>
+
+<script>
+(function() {
+  // ===== NAV DOTS =====
+  const dots = document.querySelectorAll('.nav-dot');
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slideCounter');
+  const totalSlides = slides.length;
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.slide);
+      slides[idx].scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ===== SCROLL OBSERVER FOR DOTS =====
+  const observerOpts = { threshold: 0.3 };
+  const slideObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[idx]) dots[idx].classList.add('active');
+        counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+      }
+    });
+  }, observerOpts);
+  slides.forEach(s => slideObserver.observe(s));
+
+  // ===== FADE-IN ANIMATION =====
+  const fadeEls = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  fadeEls.forEach(el => fadeObserver.observe(el));
+
+  // ===== KEYBOARD NAV =====
+  let currentSlide = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      e.preventDefault();
+      currentSlide = Math.min(currentSlide + 1, totalSlides - 1);
+      slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      currentSlide = Math.max(currentSlide - 1, 0);
+      slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  // Update currentSlide on scroll
+  const scrollTracker = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        currentSlide = Array.from(slides).indexOf(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => scrollTracker.observe(s));
+})();
+</script>
+
+</body>
+</html>
